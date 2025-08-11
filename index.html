@@ -2,13 +2,53 @@
 <html lang="hu">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bingo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Webes Bingó</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#0f1221" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
   </head>
   <body>
-    <div class="header"></div>
+    <header class="app-header">
+      <h1>Webes Bingó</h1>
+      <div class="actions">
+        <button id="newCardBtn" class="primary">Új kártya</button>
+        <button id="resetMarksBtn" class="secondary">Jelölések törlése</button>
+        <button id="printBtn" class="secondary">Nyomtatás</button>
+        <button id="shareBtn" class="secondary">Megosztás</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="board" class="board" aria-label="Bingó tábla" role="grid"></div>
+    </main>
+
+    <footer class="app-footer">
+      <span id="status">0 bingóvonal</span>
+    </footer>
+
+    <template id="cellTemplate">
+      <button class="cell" role="gridcell" aria-pressed="false"></button>
+    </template>
+
+    <dialog id="bingoDialog">
+      <h2>🎉 BINGÓ! 🎉</h2>
+      <p id="bingoMessage"></p>
+      <form method="dialog">
+        <button class="primary">Oké</button>
+      </form>
+    </dialog>
 
     <script src="script.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js').catch(console.error);
+        });
+      }
+    </script>
   </body>
 </html>

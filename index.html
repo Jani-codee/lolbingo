@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Webes Bingó</title>
+    <title>Lolos Bingó</title>
 
     <!-- verziózott css, hogy frissüljön -->
-    <link rel="stylesheet" href="style.css?v=9" />
+    <link rel="stylesheet" href="style.css?v=10" />
 
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#0f1221" />
@@ -16,7 +16,7 @@
   </head>
   <body>
     <header class="app-header">
-      <h1>Webes Bingó</h1>
+      <h1>Lolos Bingó</h1>
       <div class="actions actions--compact">
         <button id="newCardBtn" class="primary">Új kártya</button>
         <button id="resetMarksBtn" class="secondary">Jelölések törlése</button>
@@ -52,12 +52,12 @@
     </dialog>
 
     <!-- verziózott js -->
-    <script src="script.js?v=9"></script>
+    <script src="script.js?v=10"></script>
     <!-- verziózott service worker regisztráció -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js?v=9').catch(console.error);
+          navigator.serviceWorker.register('sw.js?v=10').catch(console.error);
         });
       }
     </script>

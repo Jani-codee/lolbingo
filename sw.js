@@ -1,6 +1,6 @@
 
 // Simple offline cache for Webes Bingó
-const CACHE = 'bingo-cache-v1';
+const CACHE = 'bingo-cache-v2';
 const ASSETS = [
   './',
   './index.html',

@@ -6,7 +6,7 @@
     <title>Webes Bingó</title>
 
     <!-- verziózott css, hogy frissüljön -->
-    <link rel="stylesheet" href="style.css?v=8" />
+    <link rel="stylesheet" href="style.css?v=9" />
 
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#0f1221" />
@@ -52,12 +52,12 @@
     </dialog>
 
     <!-- verziózott js -->
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=9"></script>
     <!-- verziózott service worker regisztráció -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js?v=8').catch(console.error);
+          navigator.serviceWorker.register('sw.js?v=9').catch(console.error);
         });
       }
     </script>

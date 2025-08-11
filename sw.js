@@ -1,15 +1,15 @@
 
 // Simple offline cache for Webes Bingó
-const CACHE = 'bingo-cache-v2';
+const CACHE = 'bingo-cache-v3';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './script.js',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/maskable-512.png'
+  './icon-192.png',
+  './icon-512.png',
+  './maskable-512.png'
 ];
 
 self.addEventListener('install', event => {

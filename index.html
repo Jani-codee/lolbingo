@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LOLos Bingó</title>
+    <title>Webes Bingó</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#0f1221" />
@@ -13,12 +13,17 @@
   </head>
   <body>
     <header class="app-header">
-      <h1>LOLos Bingó</h1>
-      <div class="actions">
+      <h1>Webes Bingó</h1>
+      <div class="actions actions--compact">
         <button id="newCardBtn" class="primary">Új kártya</button>
         <button id="resetMarksBtn" class="secondary">Jelölések törlése</button>
-        <button id="printBtn" class="secondary">Nyomtatás</button>
-        <button id="shareBtn" class="secondary">Megosztás</button>
+        <div class="more">
+          <button id="moreBtn" class="icon" aria-haspopup="menu" aria-expanded="false" aria-controls="moreMenu" title="Továbbiak">⋯</button>
+          <div id="moreMenu" class="menu" role="menu" hidden>
+            <button id="printBtn" role="menuitem">Nyomtatás</button>
+            <button id="shareBtn" role="menuitem">Megosztás</button>
+          </div>
+        </div>
       </div>
     </header>
 

@@ -77,6 +77,39 @@ function shuffle(arr, rand = Math.random) {
   return a;
 }
 
+// ===== Fit board to viewport height on mobile =====
+function fitToViewport(){
+  const header = document.querySelector('.app-header');
+  const footer = document.querySelector('.app-footer');
+  const board  = document.getElementById('board');
+  if(!header || !footer || !board) return;
+
+  const vh = (window.visualViewport?.height) || window.innerHeight;
+  const bodyStyles  = getComputedStyle(document.body);
+  const boardStyles = getComputedStyle(board);
+
+  const gap        = parseFloat(boardStyles.gap) || 0;
+  const padTop     = parseFloat(boardStyles.paddingTop) || 0;
+  const padBottom  = parseFloat(boardStyles.paddingBottom) || 0;
+  const bodyTop    = parseFloat(bodyStyles.paddingTop) || 0;
+  const bodyBottom = parseFloat(bodyStyles.paddingBottom) || 0;
+
+  const rows = 5;
+  const available = vh - header.offsetHeight - footer.offsetHeight - bodyTop - bodyBottom - padTop - padBottom;
+  const cellH = Math.max(52, Math.floor((available - gap * (rows - 1)) / rows));
+  document.documentElement.style.setProperty('--cell-h',  cellH + 'px');
+  document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH * 0.26))) + 'px');
+}
+
+// DOMContentLoaded-ben legyen benne:
+document.addEventListener("DOMContentLoaded", ()=>{
+  fitToViewport();
+  window.addEventListener("resize", fitToViewport);
+  window.addEventListener("orientationchange", fitToViewport);
+  // ... a többi eddigi init ...
+});
+
+
 // ---- beállítások: fixek, de URL-ből felülírhatók
 function getSettings() {
   // alap: van szabad közép, nincs seed, default szólista

@@ -128,3 +128,41 @@ dialog::backdrop{ background: rgba(0,0,0,.5); }
 @media (max-width: 900px){
   .cell{ min-height: 90px; }
 }
+
+
+/* ===== Több gomb menü (csak 2 látszik a fejlécben) ===== */
+.actions.actions--compact{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.more{ position: relative; }
+button.icon{
+  width: 40px; height: 40px;
+  padding: 0;
+  font-size: 22px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.menu{
+  position: absolute;
+  right: 0; top: calc(100% + 6px);
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 8px;
+  min-width: 180px;
+  display: grid;
+  gap: 6px;
+  z-index: 50;
+}
+.menu[hidden]{ display: none; }
+
+@media (max-width: 600px){
+  .actions.actions--compact{ gap: 6px; }
+  button.icon{ width: 36px; height: 36px; font-size: 20px; }
+}

@@ -1,6 +1,6 @@
 // sw.js
-const CACHE_STATIC = 'bingo-static-v6';
-const CACHE_PAGES  = 'bingo-pages-v6';
+const CACHE_STATIC = 'bingo-static-v7';
+const CACHE_PAGES  = 'bingo-pages-v7';
 
 const PRECACHE = [
   './',
@@ -34,8 +34,7 @@ self.addEventListener('fetch', (event) => {
   if (req.mode === 'navigate' || accept.includes('text/html')) {
     event.respondWith(
       fetch(req).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE_PAGES).then(c => c.put(req, copy));
+        caches.open(CACHE_PAGES).then(c => c.put(req, res.clone()));
         return res;
       }).catch(() => caches.match(req).then(r => r || caches.match('./index.html')))
     );

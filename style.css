@@ -128,24 +128,3 @@ dialog::backdrop{ background: rgba(0,0,0,.5); }
 @media (max-width: 900px){
   .cell{ min-height: 90px; }
 }
-
-
-/* Dinamikus cellamagasság változók (JS tölti ki) */
-:root{
-  --cell-h: 64px;
-  --cell-fs: 14px;
-}
-
-/* Mobil: a cellák pontosan kitöltik a rendelkezésre álló magasságot */
-@media (max-width: 600px){
-  .cell{
-    height: var(--cell-h);
-    min-height: 0;
-    font-size: var(--cell-fs);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .app-header h1{ display:none; }
-}

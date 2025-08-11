@@ -4,12 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Webes Bingó</title>
-    <link rel="stylesheet" href="style.css?v=8">
+
+    <!-- verziózott css, hogy frissüljön -->
+    <link rel="stylesheet" href="style.css?v=8" />
+
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#0f1221" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
   </head>
   <body>
     <header class="app-header">
@@ -17,6 +20,7 @@
       <div class="actions actions--compact">
         <button id="newCardBtn" class="primary">Új kártya</button>
         <button id="resetMarksBtn" class="secondary">Jelölések törlése</button>
+
         <div class="more">
           <button id="moreBtn" class="icon" aria-haspopup="menu" aria-expanded="false" aria-controls="moreMenu" title="Továbbiak">⋯</button>
           <div id="moreMenu" class="menu" role="menu" hidden>
@@ -47,7 +51,9 @@
       </form>
     </dialog>
 
+    <!-- verziózott js -->
     <script src="script.js?v=8"></script>
+    <!-- verziózott service worker regisztráció -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

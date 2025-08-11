@@ -183,3 +183,14 @@ button.icon{ width:40px; height:40px; padding:0; font-size:22px; line-height:1; 
   button.icon{ width:36px; height:36px; font-size:20px; }
 }
 
+:root{ --cell-h: 64px; --cell-fs: 14px; }
+
+@media (max-width: 600px){
+  .cell{
+    height: var(--cell-h);
+    min-height: 0;
+    font-size: var(--cell-fs);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+  }
+}
+

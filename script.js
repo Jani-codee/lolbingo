@@ -284,6 +284,39 @@ function printBoard() {
   window.print();
 }
 
+
+// ===== Fit board to viewport height on mobile =====
+function fitToViewport(){
+  const header = document.querySelector('.app-header');
+  const footer = document.querySelector('.app-footer');
+  const board = document.getElementById('board');
+  if(!header || !footer || !board) return;
+
+  const vh = (window.visualViewport?.height) || window.innerHeight;
+  const bodyStyles = getComputedStyle(document.body);
+  const boardStyles = getComputedStyle(board);
+
+  const gap = parseFloat(boardStyles.gap) || 0;
+  const padTop = parseFloat(boardStyles.paddingTop) || 0;
+  const padBottom = parseFloat(boardStyles.paddingBottom) || 0;
+  const bodyPadTop = parseFloat(bodyStyles.paddingTop) || 0;
+  const bodyPadBottom = parseFloat(bodyStyles.paddingBottom) || 0;
+
+  const rows = 5;
+  const available = vh
+    - header.offsetHeight
+    - footer.offsetHeight
+    - bodyPadTop - bodyPadBottom
+    - padTop - padBottom;
+
+  const cellH = Math.max(52, Math.floor((available - gap * (rows - 1)) / rows));
+  document.documentElement.style.setProperty('--cell-h', cellH + 'px');
+
+  // Dinamikus betűméret
+  const fs = Math.max(11, Math.min(18, Math.floor(cellH * 0.26)));
+  document.documentElement.style.setProperty('--cell-fs', fs + 'px');
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("newCardBtn").addEventListener("click", buildNew);
   document

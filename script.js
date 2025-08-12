@@ -1,47 +1,13 @@
-/* ====== Webes Bingó – kombinált tábla több játékostól (v12) ====== */
+/* ====== Webes Bingó – kombinált tábla több játékostól (v13) ====== */
 
-/* --- Előre definiált játékosok és saját szókészletük --- */
 const PLAYER_PRESETS = {
-  "Ádám": [
-    "Sprint demo","Code review","Bugfix","Refaktor","Merging","Ticket csúszik",
-    "„Nézzük meg gyorsan”","CI lefutott","Deploy","„Ez edge-case”","TDD",
-    "„Majd backlog”","Meeting elhúzódik","Kamera off","Késés","Chat ping",
-    "Release note","„Nem reprodukálható”","Hotfix","Pair programming","Lint hiba",
-    "PR sablon","Staging","„Újraindítottam”","Spec hiányos"
-  ],
-  "Bea": [
-    "Marketing slide","Kampányterv","CTA változtatás","A/B teszt","„Megkérdezem a csapatot”",
-    "Szerkesztési jog","Kezdőlap frissítés","„Később posztoljuk”","Link rövidítése",
-    "„Ezt még jóvá kell hagyni”","UAT","Teszt felhasználó","„Küldöm a linket”",
-    "Árajánlat","Persona","„Nincs elég adat”","Workshop","Hírlevél","KPI",
-    "Wireframe","„Van erről stat?”","Jóváhagyás","Brief","Landing","Benchmark"
-  ],
-  "Csaba": [
-    "Szerver restarthoz kell jog","Log elemzés","CPU spike","Mem leak gyanú",
-    "„Nála működik”","Késő este deploy","Rollback","Config mismatch",
-    "„Majd cronból megy”","Rate limit","„Átmeneti hiba”","Alert jött",
-    "DNS cache","„Átlagos terhelés”","Failover","Healthcheck","„Kézzel patcheltem”",
-    "Kibana","Grafana","„Rögtön nézem”","SSH","„Státusz oldalt nézted?”",
-    "Timeout","„Kint van az incident”","Root cause"
-  ],
-  "Dóri": [
-    "User interjú","Persona update","Journey map","Affinity diagram",
-    "„Papíron jobban nézett ki”","Tap target kicsi","„Mobile first”",
-    "Figma frissítés","Spacing","„Sötét mód mikor?”","Kontraszt kevés",
-    "„Ez túl zajos”","Szegmens","Heatmap","FigJam","„Ez nem fér ki”",
-    "„Amikor a user...”","AB teszt terv","„Fájlrendszer?”","Komponens könyvtár",
-    "„Nem konzisztens”","Spacing token","„12 oszlopos grid”","„Rendszer ikon?”","Prototípus"
-  ],
-  "Emőke": [
-    "Pénzügyi riport","Budget cut","Forecast","„Szoros a keret”","ROI",
-    "„Backlog prioritás”","SLA","„Scope csökkentés”","Risk","„Roadmap csúszik”",
-    "„Stakeholder review”","High-level","OKR","„Ezt mérjük?”","„Ez nem fér bele”",
-    "„Szállítási dátum?”","„Melyik quarter?”","„Pingeld meg őket”","Approval",
-    "Contract","„Vendor válaszolt?”","„QBR”","„RACI”","„Mit mond a PMO?”","„Escalation”"
-  ]
+  "Ádám": ["Sprint demo","Code review","Bugfix","Refaktor","Merging","Ticket csúszik","„Nézzük meg gyorsan”","CI lefutott","Deploy","„Ez edge-case”","TDD","„Majd backlog”","Meeting elhúzódik","Kamera off","Késés","Chat ping","Release note","„Nem reprodukálható”","Hotfix","Pair programming","Lint hiba","PR sablon","Staging","„Újraindítottam”","Spec hiányos"],
+  "Bea": ["Marketing slide","Kampányterv","CTA változtatás","A/B teszt","„Megkérdezem a csapatot”","Szerkesztési jog","Kezdőlap frissítés","„Később posztoljuk”","Link rövidítése","„Ezt még jóvá kell hagyni”","UAT","Teszt felhasználó","„Küldöm a linket”","Árajánlat","Persona","„Nincs elég adat”","Workshop","Hírlevél","KPI","Wireframe","„Van erről stat?”","Jóváhagyás","Brief","Landing","Benchmark"],
+  "Csaba": ["Szerver restarthoz kell jog","Log elemzés","CPU spike","Mem leak gyanú","„Nála működik”","Késő este deploy","Rollback","Config mismatch","„Majd cronból megy”","Rate limit","„Átmeneti hiba”","Alert jött","DNS cache","„Átlagos terhelés”","Failover","Healthcheck","„Kézzel patcheltem”","Kibana","Grafana","„Rögtön nézem”","SSH","„Státusz oldalt nézted?”","Timeout","„Kint van az incident”","Root cause"],
+  "Dóri": ["User interjú","Persona update","Journey map","Affinity diagram","„Papíron jobban nézett ki”","Tap target kicsi","„Mobile first”","Figma frissítés","Spacing","„Sötét mód mikor?”","Kontraszt kevés","„Ez túl zajos”","Szegmens","Heatmap","FigJam","„Ez nem fér ki”","„Amikor a user...”","AB teszt terv","„Fájlrendszer?”","Komponens könyvtár","„Nem konzisztens”","Spacing token","„12 oszlopos grid”","„Rendszer ikon?”","Prototípus"],
+  "Emőke": ["Pénzügyi riport","Budget cut","Forecast","„Szoros a keret”","ROI","„Backlog prioritás”","SLA","„Scope csökkentés”","Risk","„Roadmap csúszik”","„Stakeholder review”","High-level","OKR","„Ezt mérjük?”","„Ez nem fér bele”","„Szállítási dátum?”","„Melyik quarter?”","„Pingeld meg őket”","Approval","Contract","„Vendor válaszolt?”","„QBR”","„RACI”","„Mit mond a PMO?”","„Escalation”"]
 };
 
-/* --- Konstansok / segédek --- */
 const BOARD_SIZE = 5;
 const STORAGE_KEY = "hu-bingo-combined-v1";
 const $ = (sel, root=document) => root.querySelector(sel);
@@ -53,29 +19,22 @@ function seededRandom(seed){
 }
 function shuffle(arr, rand=Math.random){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rand()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-/* --- Mobil illesztés: cellamagasság a viewporthoz --- */
 function fitToViewport(){
-  const header=$('.app-header'); const footer=$('.app-footer'); const board=$('#board');
+  const header=$('.app-header'), footer=$('.app-footer'), board=$('#board');
   if(!header || !footer || !board) return;
-  const vh=(window.visualViewport?.height) || window.innerHeight;
-  const bodyStyles=getComputedStyle(document.body), boardStyles=getComputedStyle(board);
-  const gap=parseFloat(boardStyles.gap)||0, padTop=parseFloat(boardStyles.paddingTop)||0, padBottom=parseFloat(boardStyles.paddingBottom)||0;
-  const bodyTop=parseFloat(bodyStyles.paddingTop)||0, bodyBottom=parseFloat(bodyStyles.paddingBottom)||0;
-  const rows=5;
-  const available = vh - header.offsetHeight - footer.offsetHeight - bodyTop - bodyBottom - padTop - padBottom;
-  const cellH = Math.max(52, Math.floor((available - gap*(rows-1)) / rows));
-  document.documentElement.style.setProperty('--cell-h', cellH + 'px');
-  document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH*0.26))) + 'px');
+  const vh=(window.visualViewport?.height)||window.innerHeight;
+  const bs=getComputedStyle(board), bod=getComputedStyle(document.body);
+  const gap=parseFloat(bs.gap)||0, padTop=parseFloat(bs.paddingTop)||0, padBottom=parseFloat(bs.paddingBottom)||0;
+  const bodyTop=parseFloat(bod.paddingTop)||0, bodyBottom=parseFloat(bod.paddingBottom)||0;
+  const rows=5, avail=vh-header.offsetHeight-footer.offsetHeight-bodyTop-bodyBottom-padTop-padBottom;
+  const cellH=Math.max(52, Math.floor((avail - gap*(rows-1))/rows));
+  document.documentElement.style.setProperty('--cell-h', cellH+'px');
+  document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH*0.26)))+'px');
 }
 
-/* --- Állapot --- */
-const state = {
-  selectedPlayers: [],   // pl. ["Ádám","Bea","Dóri"]
-  cells: []              // [{text, owner, marked} x25]
-};
-let lastLines = 0;       // bingóvonalak száma utolsó ellenőrzéskor
+const state = { selectedPlayers: [], cells: [] };
+let lastLines = 0;
 
-/* --- Bingó-számlálás és ünneplés --- */
 function countBingos(cells){
   const g=i=>cells[i].marked?1:0, n=BOARD_SIZE; let lines=0;
   for(let r=0;r<n;r++){ let ok=true; for(let c=0;c<n;c++){ if(!g(r*n+c)){ok=false;break;} } if(ok) lines++; }
@@ -86,44 +45,31 @@ function countBingos(cells){
 }
 function maybeCelebrate(){
   const lines = countBingos(state.cells);
-  if (lines > lastLines) {
-    const dlg = $('#bingoDialog');
-    const msg = $('#bingoMessage');
-    const delta = lines - lastLines;
-    if (msg) msg.textContent = `Új vonal(ak): +${delta}. Összesen: ${lines}.`;
-    if (dlg?.showModal) { try { dlg.showModal(); } catch(e){} }
-    else { alert('🎉 BINGÓ! 🎉'); }
+  if(lines > lastLines){
+    const dlg = $('#bingoDialog'); const msg = $('#bingoMessage'); const delta = lines - lastLines;
+    if(msg) msg.textContent = `Új vonal(ak): +${delta}. Összesen: ${lines}.`;
+    if(dlg?.showModal){ try{ dlg.showModal(); }catch(e){} } else { alert('🎉 BINGÓ! 🎉'); }
   }
   lastLines = lines;
 }
 
-/* --- Kombinált tábla építése (kvóta szerinti kiegyensúlyozás) --- */
 function buildCombinedCells(names, seed=""){
-  const k = names.length;
-  const rand = seed ? seededRandom(seed) : Math.random;
-  const base = Math.floor(25 / k);
-  let rem = 25 % k;
-
-  const order = shuffle([...names], rand);
-  const quotas = Object.fromEntries(names.map(n => [n, base]));
-  for(let i=0;i<rem;i++){ quotas[order[i]]++; }
-
+  const k=names.length, rand=seed?seededRandom(seed):Math.random;
+  const base=Math.floor(25/k); let rem=25%k;
+  const order=shuffle([...names], rand);
+  const quotas=Object.fromEntries(names.map(n=>[n, base])); for(let i=0;i<rem;i++){ quotas[order[i]]++; }
   let pool = [];
-  names.forEach(n => {
+  names.forEach(n=>{
     const words = shuffle(PLAYER_PRESETS[n], rand).slice(0, quotas[n]);
-    pool.push(...words.map(w => ({ text:w, owner:n })));
+    pool.push(...words.map(w=>({text:w, owner:n})));
   });
-
-  pool = shuffle(pool, rand).slice(0, 25);
+  pool = shuffle(pool, rand).slice(0,25);
   return pool.map(it => ({ text: it.text, owner: it.owner, marked: false }));
 }
 
-/* --- Renderelés --- */
 function renderBoard(){
-  const board = $('#board');
-  board.innerHTML = "";
+  const board = $('#board'); board.innerHTML="";
   const tpl = $('#cellTemplate');
-
   state.cells.forEach((cell, idx)=>{
     const btn = tpl.content.firstElementChild.cloneNode(true);
     btn.innerHTML = `<div class="txt">${cell.text}</div><span class="owner"></span>`;
@@ -131,37 +77,33 @@ function renderBoard(){
     ownerEl.textContent = cell.owner;
     const colorIdx = state.selectedPlayers.indexOf(cell.owner) % 5;
     ownerEl.classList.add('c'+colorIdx);
-
     btn.setAttribute('aria-pressed', String(!!cell.marked));
     btn.addEventListener('click', ()=>{
       const marked = btn.getAttribute('aria-pressed') === 'true';
       btn.setAttribute('aria-pressed', String(!marked));
       state.cells[idx].marked = !marked;
       updateStatus();
-      maybeCelebrate();   // <-- bingó popup ellenőrzés
+      maybeCelebrate();
       saveState();
     });
     board.appendChild(btn);
   });
 }
 
-/* --- Mentés / betöltés --- */
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify({ selectedPlayers: state.selectedPlayers, cells: state.cells })); }
 function loadState(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; } }
 
-/* --- Státusz frissítés --- */
 function updateStatus(){
   const lines = countBingos(state.cells);
-  const pickLabel = state.selectedPlayers.length ? " – " + state.selectedPlayers.join(", ") : "";
-  $('#status').textContent = `${lines} bingóvonal${pickLabel}`;
-  return lines; // hasznos lehet kívül
+  const pick = state.selectedPlayers.length ? " – " + state.selectedPlayers.join(", ") : "";
+  $('#status').textContent = `${lines} bingóvonal${pick}`;
+  return lines;
 }
 
-/* --- Új tábla az aktuális játékos-választással --- */
 function rebuildBoard(seed=""){
   state.cells = buildCombinedCells(state.selectedPlayers, seed);
   renderBoard();
-  lastLines = countBingos(state.cells);   // induló érték beállítása
+  lastLines = countBingos(state.cells);
   updateStatus();
   saveState();
   fitToViewport();
@@ -169,9 +111,8 @@ function rebuildBoard(seed=""){
 
 /* --- Játékos választó --- */
 function buildPicker(){
-  const list = $('#pickerList');
-  list.innerHTML = "";
-  Object.keys(PLAYER_PRESETS).forEach(name => {
+  const list = $('#pickerList'); list.innerHTML="";
+  Object.keys(PLAYER_PRESETS).forEach(name=>{
     const item = document.createElement('label');
     item.className = 'picker-item';
     const checked = state.selectedPlayers.includes(name) ? 'checked' : '';
@@ -181,27 +122,37 @@ function buildPicker(){
 }
 function openPicker(){ buildPicker(); $('#playerPicker')?.showModal?.(); }
 
-/* --- Fejléc overflow menü --- */
+/* --- Menük --- */
 function setupMenu(){
-  const btn = $('#moreBtn'); const menu = $('#moreMenu');
+  const btn=$('#moreBtn'), menu=$('#moreMenu');
   if(!btn || !menu) return;
-  function close(){ menu.hidden = true; btn.setAttribute('aria-expanded','false'); }
-  function open(){ menu.hidden = false; btn.setAttribute('aria-expanded','true'); }
+  function close(){ menu.hidden=true; btn.setAttribute('aria-expanded','false'); }
+  function open(){ menu.hidden=false; btn.setAttribute('aria-expanded','true'); }
   btn.addEventListener('click', (e)=>{ e.stopPropagation(); menu.hidden ? open() : close(); });
-  document.addEventListener('click', (e)=>{ if(menu.hidden) return; if(!menu.contains(e.target) && e.target !== btn) close(); });
-  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') close(); });
+  document.addEventListener('click', (e)=>{ if(menu.hidden)return; if(!menu.contains(e.target) && e.target!==btn) close(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 }
 
 /* --- Fő --- */
 document.addEventListener("DOMContentLoaded", ()=>{
   setupMenu();
 
-  // Gombok
-  $('#newCardBtn').addEventListener('click', ()=> rebuildBoard(""));
+  // Új kártya – megerősítés
+  const newDlg = $('#newCardDialog');
+  $('#newCardBtn').addEventListener('click', ()=>{
+    if(state.selectedPlayers.length < 3){
+      openPicker();
+      return;
+    }
+    newDlg?.showModal?.();
+  });
+  $('#keepPlayersBtn').addEventListener('click', ()=>{ newDlg.close(); rebuildBoard(""); });
+  $('#reselectPlayersBtn').addEventListener('click', ()=>{ newDlg.close(); openPicker(); });
+
   $('#resetMarksBtn').addEventListener('click', ()=>{
     state.cells = state.cells.map(c => ({...c, marked:false}));
     renderBoard();
-    lastLines = countBingos(state.cells); // induló érték reset után
+    lastLines = countBingos(state.cells);
     updateStatus();
     saveState();
   });
@@ -217,14 +168,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
   });
   $('#pickPlayersBtn').addEventListener('click', ()=>{ $('#moreMenu').hidden = true; openPicker(); });
 
-  // Picker ok/cancel
+  // Picker OK/Cancel
   const picker = $('#playerPicker');
   $('#pickerOk').addEventListener('click', (e)=>{
     const names = Array.from(document.querySelectorAll('input[name="pick"]:checked')).map(i=>i.value);
     if(names.length < 3 || names.length > 5){
-      e.preventDefault();
-      alert("Válassz 3 és 5 fő között!");
-      return;
+      e.preventDefault(); alert("Válassz 3 és 5 fő között!"); return;
     }
     picker.close();
     state.selectedPlayers = names;
@@ -232,7 +181,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   });
   $('#pickerCancel').addEventListener('click', ()=> picker.close());
 
-  // URL vagy mentett állapot betöltése
+  // Betöltés
   const params = new URLSearchParams(location.search);
   const p64 = params.get("p");
   const saved = loadState();
@@ -257,7 +206,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     state.cells = (saved.cells||[]).filter(Boolean);
     if(state.cells.length === 25){
       renderBoard();
-      lastLines = countBingos(state.cells); // induló érték
+      lastLines = countBingos(state.cells);
       updateStatus();
       fitToViewport();
       window.addEventListener("resize", fitToViewport);
@@ -266,7 +215,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
   }
 
-  // Nincs állapot: indító picker
+  // Első indítás
   openPicker();
   fitToViewport();
   window.addEventListener("resize", fitToViewport);

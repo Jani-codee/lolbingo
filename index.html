@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Webes Bingó</title>
-    <link rel="stylesheet" href="style.css?v=11" />
+    <title>Lolos Bingó</title>
+    <link rel="stylesheet" href="style.css?v=12" />
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#0f1221" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +13,7 @@
   </head>
   <body>
     <header class="app-header">
-      <h1>Webes Bingó</h1>
+      <h1>Lolos Bingó</h1>
       <div class="actions actions--compact">
         <button id="newCardBtn" class="primary" title="Kártya újragenerálása">Új kártya</button>
         <button id="resetMarksBtn" class="secondary" title="Jelölések törlése">Törlés</button>
@@ -61,11 +61,11 @@
       </form>
     </dialog>
 
-    <script src="script.js?v=11"></script>
+    <script src="script.js?v=12"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js?v=11').catch(console.error);
+          navigator.serviceWorker.register('sw.js?v=12').catch(console.error);
         });
       }
     </script>

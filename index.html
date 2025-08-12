@@ -61,6 +61,16 @@
       </form>
     </dialog>
 
+    <!-- Új kártya megerősítés -->
+    <dialog id="newCardDialog">
+      <h3>Új kártyák</h3>
+      <p>Maradjanak a most kiválasztott emberek, vagy újra kiválasztod őket?</p>
+      <form method="dialog" class="picker-actions">
+        <button id="keepPlayersBtn" class="primary" value="default">Maradjanak</button>
+        <button id="reselectPlayersBtn" class="secondary" value="cancel">Újra kiválasztom</button>
+      </form>
+    </dialog>
+
     <script src="script.js?v=13"></script>
     <script>
       if ('serviceWorker' in navigator) {

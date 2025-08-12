@@ -130,67 +130,110 @@ dialog::backdrop{ background: rgba(0,0,0,.5); }
 }
 
 
-/* ===== Több gomb menü (csak 2 látszik a fejlécben) ===== */
-.actions.actions--compact{
+/* ===== Több játékos / tabok ===== */
+.tabs{
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+}
+.tab{
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.tab[aria-selected="true"]{
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  color: #0b1024;
+  border: none;
+  font-weight: 700;
+}
+.boards{ display: grid; }
+.board-wrap{ display: none; }
+.board-wrap[aria-hidden="false"]{ display: block; }
+
+/* ===== Játékos választó ===== */
+#playerPicker{
+  width: min(520px, 92vw);
+}
+#playerPicker h3{
+  margin: 0 0 10px;
+}
+.picker-list{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.picker-item{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: nowrap;
 }
-.more{ position: relative; }
-button.icon{
-  width: 40px; height: 40px;
-  padding: 0;
-  font-size: 22px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.picker-item input{ transform: scale(1.15); }
+.picker-actions{
+  display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;
 }
-.menu{
+.picker-hint{ color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+@media (max-width: 600px){
+  .tabs{ padding: 4px 0; gap: 6px; }
+  .tab{ padding: 6px 10px; }
+  .picker-list{ grid-template-columns: 1fr; }
+}
+
+
+/* ===== Cell owner badge ===== */
+.cell{ position: relative; }
+.cell .owner{
   position: absolute;
-  right: 0; top: calc(100% + 6px);
-  background: var(--card);
+  left: 8px; bottom: 6px;
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  opacity: 0.95;
+}
+.owner.c0{ background: rgba(124,156,242,0.25); }
+.owner.c1{ background: rgba(68,230,195,0.25); }
+.owner.c2{ background: rgba(255,107,107,0.25); }
+.owner.c3{ background: rgba(255,207,119,0.25); }
+.owner.c4{ background: rgba(173,133,255,0.25); }
+
+/* ===== Játékos választó ===== */
+#playerPicker{ width: min(520px, 92vw); }
+#playerPicker h3{ margin: 0 0 10px; }
+.picker-list{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.picker-item{
+  background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 12px;
-  box-shadow: var(--shadow);
-  padding: 8px;
-  min-width: 180px;
-  display: grid;
-  gap: 6px;
-  z-index: 50;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.menu[hidden]{ display: none; }
+.picker-item input{ transform: scale(1.15); }
+.picker-actions{ display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+.picker-hint{ color: var(--muted); font-size: 12px; margin-top: 8px; }
 
 @media (max-width: 600px){
-  .actions.actions--compact{ gap: 6px; }
-  button.icon{ width: 36px; height: 36px; font-size: 20px; }
+  .picker-list{ grid-template-columns: 1fr; }
 }
-
-/* ===== Több gomb menü (csak 2 látszik a fejlécben) ===== */
-.actions.actions--compact{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
-.more{ position:relative; }
-button.icon{ width:40px; height:40px; padding:0; font-size:22px; line-height:1; display:inline-flex; align-items:center; justify-content:center; }
-.menu{
-  position:absolute; right:0; top:calc(100% + 6px);
-  background: var(--card); border:1px solid rgba(255,255,255,0.15);
-  border-radius:12px; box-shadow: var(--shadow); padding:8px; min-width:180px;
-  display:grid; gap:6px; z-index:50;
-}
-.menu[hidden]{ display:none; }
-@media (max-width:600px){
-  .actions.actions--compact{ gap:6px; }
-  button.icon{ width:36px; height:36px; font-size:20px; }
-}
-
-:root{ --cell-h: 64px; --cell-fs: 14px; }
-
-@media (max-width: 600px){
-  .cell{
-    height: var(--cell-h);
-    min-height: 0;
-    font-size: var(--cell-fs);
-    display: flex; align-items: center; justify-content: center; text-align: center;
-  }
-}
-

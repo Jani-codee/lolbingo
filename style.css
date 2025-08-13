@@ -338,3 +338,32 @@ dialog::backdrop{ background: rgba(0,0,0,.5); }
 }
 
 /* (A mobilos szabályok maradhatnak, ott a sidebar továbbra is rejtve van.) */
+
+/* ===== Asztali layout – kisebb rés a tábla és a névjegyek között ===== */
+@media (min-width: 900px){
+  .layout{
+    /* szűkebb hézag a két oszlop között */
+    gap: 16px;
+    /* ne toljuk feleslegesen befelé a táblát */
+    padding-left: 0;
+    /* kicsit tágabb első oszlop, hogy ne “lebegjen” középen */
+    grid-template-columns: minmax(820px, 1fr) 320px;
+  }
+
+  /* a wrapper és a board ne adjon plusz margót a jobb oldalon */
+  .board-shell{ margin: 0; }
+  .layout .board{
+    margin: 0;        /* fontos: szedjük le a margin-right:auto-t */
+    width: 100%;
+    max-width: none;  /* ha korábban volt max-width, ne korlátozza a szélességet */
+  }
+
+  /* a sidebar gördüljön a tartalommal (ne legyen sticky) */
+  .sidebar{
+    position: static;
+    top: auto;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+}

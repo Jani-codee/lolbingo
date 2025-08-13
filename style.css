@@ -304,3 +304,10 @@ dialog::backdrop{ background: rgba(0,0,0,.5); }
 .profile-row .label{ font-weight: 700; padding-top: 6px; }
 .profile-row input[type="url"]{ width: 100%; }
 .profile-row textarea{ width: 100%; min-height: 72px; resize: vertical; }
+
+/* ===== Névjegykártya színvariánsok (megegyezik az owner badge-ekkel) ===== */
+.person-card.c0{ background: rgba(124,156,242,0.18); border-color: rgba(124,156,242,0.38); }
+.person-card.c1{ background: rgba( 68,230,195,0.18); border-color: rgba( 68,230,195,0.38); }
+.person-card.c2{ background: rgba(255,107,107,0.18); border-color: rgba(255,107,107,0.38); }
+.person-card.c3{ background: rgba(255,207,119,0.18); border-color: rgba(255,207,119,0.38); }
+.person-card.c4{ background: rgba(173,133,255,0.18); border-color: rgba(173,133,255,0.38); }

@@ -41,11 +41,6 @@ const PLAYER_PRESETS = {
   ]
 };
 
-
-/* --- Játékos presetek (változatlan) --- */
-const PLAYER_PRESETS = { /* ... ide mehet a jelenlegi Ádám/Bea/Csaba/Dóri/Emőke lista ... */ };
-// (Hely kímélés: hagyd meg a mostani listádat változatlanul)
-
 /* --- Profilok (kép + jegyzet) --- */
 const PROFILE_KEY = "hu-bingo-profiles-v1";
 let PROFILES = {}; // { Név: {img:"", note:""} }

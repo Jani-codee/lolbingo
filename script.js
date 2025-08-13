@@ -76,19 +76,39 @@ function seededRandom(seed){
 }
 function shuffle(arr, rand=Math.random){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rand()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-/* --- Mobil illesztés --- */
+// ---- Mobil/desktop illesztés: a tábla magassága férjen ki görgetés nélkül
 function fitToViewport(){
-  const header=$('.app-header'), footer=$('.app-footer'), board=$('#board');
+  const header = document.querySelector('.app-header');
+  const footer = document.querySelector('.app-footer');
+  const board  = document.getElementById('board');
   if(!header || !footer || !board) return;
-  const vh=(window.visualViewport?.height)||window.innerHeight;
-  const bs=getComputedStyle(board), bod=getComputedStyle(document.body);
-  const gap=parseFloat(bs.gap)||0, padTop=parseFloat(bs.paddingTop)||0, padBottom=parseFloat(bs.paddingBottom)||0;
-  const bodyTop=parseFloat(bod.paddingTop)||0, bodyBottom=parseFloat(bod.paddingBottom)||0;
-  const rows=5, avail=vh-header.offsetHeight-footer.offsetHeight-bodyTop-bodyBottom-padTop-padBottom;
-  const cellH=Math.max(52, Math.floor((avail - gap*(rows-1))/rows));
-  document.documentElement.style.setProperty('--cell-h', cellH+'px');
-  document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH*0.26)))+'px');
+
+  const vh = (window.visualViewport?.height) || window.innerHeight;
+  const bodyStyles  = getComputedStyle(document.body);
+  const boardStyles = getComputedStyle(board);
+
+  const gap        = parseFloat(boardStyles.gap) || 0;
+  const padTop     = parseFloat(boardStyles.paddingTop) || 0;
+  const padBottom  = parseFloat(boardStyles.paddingBottom) || 0;
+  const bodyTop    = parseFloat(bodyStyles.paddingTop) || 0;
+  const bodyBottom = parseFloat(bodyStyles.paddingBottom) || 0;
+
+  // kis ráhagyás, hogy biztosan ne legyen 1-2px felesleges görgetés
+  const fudge = 10;
+
+  const rows = 5;
+  const available = vh
+    - header.offsetHeight
+    - footer.offsetHeight
+    - bodyTop - bodyBottom
+    - padTop  - padBottom
+    - fudge;
+
+  const cellH = Math.max(52, Math.floor((available - gap * (rows - 1)) / rows));
+  document.documentElement.style.setProperty('--cell-h',  cellH + 'px');
+  document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH * 0.26))) + 'px');
 }
+
 
 /* --- Állapot --- */
 const state = { selectedPlayers: [], cells: [] };

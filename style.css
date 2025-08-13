@@ -311,3 +311,30 @@ dialog::backdrop{ background: rgba(0,0,0,.5); }
 .person-card.c2{ background: rgba(255,107,107,0.18); border-color: rgba(255,107,107,0.38); }
 .person-card.c3{ background: rgba(255,207,119,0.18); border-color: rgba(255,207,119,0.38); }
 .person-card.c4{ background: rgba(173,133,255,0.18); border-color: rgba(173,133,255,0.38); }
+
+/* ===== Asztali layout finomhangolás ===== */
+@media (min-width: 900px){
+  .layout{
+    display: grid;
+    /* több hely a jobb sávnak + a tábla kissé jobbra tolva */
+    grid-template-columns: minmax(760px, 1fr) 340px;
+    gap: 28px;
+    max-width: min(1400px, 95vw);
+    margin: 0 auto;
+    padding-left: 14px;          /* tábla kicsit jobbra */
+    align-items: start;
+  }
+  .board-shell{ margin-left: 12px; }
+
+  /* A névjegysáv NE legyen sticky: gördüljön a tartalommal */
+  .sidebar{
+    display: block;
+    position: static;            /* <- sticky helyett */
+    top: auto;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+}
+
+/* (A mobilos szabályok maradhatnak, ott a sidebar továbbra is rejtve van.) */

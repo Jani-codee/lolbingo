@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Lolos Bingó</title>
-    <link rel="stylesheet" href="style.css?v=14" />
+
+    <link rel="stylesheet" href="style.css?v=15" />
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#0f1221" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -21,6 +22,7 @@
           <button id="moreBtn" class="icon" aria-haspopup="menu" aria-expanded="false" aria-controls="moreMenu" title="Továbbiak">⋯</button>
           <div id="moreMenu" class="menu" role="menu" hidden>
             <button id="pickPlayersBtn" role="menuitem">Játékosok kiválasztása</button>
+            <button id="editProfilesBtn" role="menuitem">Profilok szerkesztése</button>
             <button id="printBtn" role="menuitem">Nyomtatás</button>
             <button id="shareBtn" role="menuitem">Megosztás</button>
           </div>
@@ -29,7 +31,13 @@
     </header>
 
     <main>
-      <div id="board" class="board" aria-label="Bingó tábla" role="grid"></div>
+      <!-- ÚJ elrendezés: bal oldalt tábla, jobb oldalt névjegykártyák -->
+      <div class="layout">
+        <div class="board-shell">
+          <div id="board" class="board" aria-label="Bingó tábla" role="grid"></div>
+        </div>
+        <aside class="sidebar" id="sidebar" aria-label="Játékos kártyák"></aside>
+      </div>
     </main>
 
     <footer class="app-footer">
@@ -43,9 +51,7 @@
     <dialog id="bingoDialog">
       <h2>🎉 BINGÓ! 🎉</h2>
       <p id="bingoMessage"></p>
-      <form method="dialog">
-        <button class="primary">Oké</button>
-      </form>
+      <form method="dialog"><button class="primary">Oké</button></form>
     </dialog>
 
     <!-- Játékos választó -->
@@ -71,13 +77,13 @@
       </form>
     </dialog>
 
-    <script src="script.js?v=14"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js?v=14').catch(console.error);
-        });
-      }
-    </script>
-  </body>
-</html>
+    <!-- Profil szerkesztő -->
+    <dialog id="profileEditor">
+      <form method="dialog" id="profileForm">
+        <h3>Profilok</h3>
+        <div id="profileFields" class="profiles"></div>
+        <div class="picker-actions">
+          <button value="cancel" class="secondary">Mégse</button>
+          <button id="saveProfilesBtn" value="default" class="primary">Mentés</button>
+        </div>
+        <div class="picker-hint">Adj meg kép URL-t (pl. Imgur) és egy rövid leírást.</d

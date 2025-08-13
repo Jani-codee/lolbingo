@@ -1,5 +1,47 @@
 /* ====== Webes Bingó – kombinált tábla + jobb oldali névjegyek (v15) ====== */
 
+/* --- Játékos presetek: név -> saját kifejezések listája --- */
+const PLAYER_PRESETS = {
+  "Ádám": [
+    "Sprint demo","Code review","Bugfix","Refaktor","Merging","Ticket csúszik",
+    "„Nézzük meg gyorsan”","CI lefutott","Deploy","„Ez edge-case”","TDD",
+    "„Majd backlog”","Meeting elhúzódik","Kamera off","Késés","Chat ping",
+    "Release note","„Nem reprodukálható”","Hotfix","Pair programming","Lint hiba",
+    "PR sablon","Staging","„Újraindítottam”","Spec hiányos"
+  ],
+  "Bea": [
+    "Marketing slide","Kampányterv","CTA változtatás","A/B teszt","„Megkérdezem a csapatot”",
+    "Szerkesztési jog","Kezdőlap frissítés","„Később posztoljuk”","Link rövidítése",
+    "„Ezt még jóvá kell hagyni”","UAT","Teszt felhasználó","„Küldöm a linket”",
+    "Árajánlat","Persona","„Nincs elég adat”","Workshop","Hírlevél","KPI",
+    "Wireframe","„Van erről stat?”","Jóváhagyás","Brief","Landing","Benchmark"
+  ],
+  "Csaba": [
+    "Szerver restarthoz kell jog","Log elemzés","CPU spike","Mem leak gyanú",
+    "„Nála működik”","Késő este deploy","Rollback","Config mismatch",
+    "„Majd cronból megy”","Rate limit","„Átmeneti hiba”","Alert jött",
+    "DNS cache","„Átlagos terhelés”","Failover","Healthcheck","„Kézzel patcheltem”",
+    "Kibana","Grafana","„Rögtön nézem”","SSH","„Státusz oldalt nézted?”",
+    "Timeout","„Kint van az incident”","Root cause"
+  ],
+  "Dóri": [
+    "User interjú","Persona update","Journey map","Affinity diagram",
+    "„Papíron jobban nézett ki”","Tap target kicsi","„Mobile first”",
+    "Figma frissítés","Spacing","„Sötét mód mikor?”","Kontraszt kevés",
+    "„Ez túl zajos”","Szegmens","Heatmap","FigJam","„Ez nem fér ki”",
+    "„Amikor a user...”","AB teszt terv","„Fájlrendszer?”","Komponens könyvtár",
+    "„Nem konzisztens”","Spacing token","„12 oszlopos grid”","„Rendszer ikon?”","Prototípus"
+  ],
+  "Emőke": [
+    "Pénzügyi riport","Budget cut","Forecast","„Szoros a keret”","ROI",
+    "„Backlog prioritás”","SLA","„Scope csökkentés”","Risk","„Roadmap csúszik”",
+    "„Stakeholder review”","High-level","OKR","„Ezt mérjük?”","„Ez nem fér bele”",
+    "„Szállítási dátum?”","„Melyik quarter?”","„Pingeld meg őket”","Approval",
+    "Contract","„Vendor válaszolt?”","„QBR”","„RACI”","„Mit mond a PMO?”","„Escalation”"
+  ]
+};
+
+
 /* --- Játékos presetek (változatlan) --- */
 const PLAYER_PRESETS = { /* ... ide mehet a jelenlegi Ádám/Bea/Csaba/Dóri/Emőke lista ... */ };
 // (Hely kímélés: hagyd meg a mostani listádat változatlanul)

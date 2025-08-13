@@ -1,4 +1,4 @@
-/* ====== Webes Bingó – kombinált tábla + jobb oldali névjegyek (v15) ====== */
+/* ====== Webes Bingó – kombinált tábla + jobb oldali névjegyek (v17) ====== */
 
 /* --- Játékos presetek: név -> saját kifejezések listája --- */
 const PLAYER_PRESETS = {
@@ -41,11 +41,24 @@ const PLAYER_PRESETS = {
   ]
 };
 
+/* --- BEDRÓTOZOTT ALAPÉRTELMEZETT PROFILOK (minden eszközön azonos) --- */
+/* Tipp: a fájlneveket ékezet nélkül add meg az img/ mappában. */
+const DEFAULT_PROFILES = {
+  "Ádám":  { img: "img/adam.jpg",  note: "" },
+  "Bea":   { img: "img/bea.jpg",   note: "" },
+  "Csaba": { img: "img/csaba.jpg", note: "" },
+  "Dóri":  { img: "img/dori.jpg",  note: "" },
+  "Emőke": { img: "img/emoke.jpg", note: "" }
+};
+
 /* --- Profilok (kép + jegyzet) --- */
 const PROFILE_KEY = "hu-bingo-profiles-v1";
 let PROFILES = {}; // { Név: {img:"", note:""} }
 function loadProfiles(){
-  try{ PROFILES = JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; }catch{ PROFILES = {}; }
+  // a helyi (szerkesztett) értékek felülírják a bedrótozott alapokat
+  let local = {};
+  try { local = JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch { local = {}; }
+  PROFILES = { ...DEFAULT_PROFILES, ...local };
 }
 function saveProfiles(){
   localStorage.setItem(PROFILE_KEY, JSON.stringify(PROFILES||{}));
@@ -135,17 +148,21 @@ function renderBoard(){
     });
     board.appendChild(btn);
   });
-  renderSidebar(); // <-- ÚJ
+  renderSidebar();
 }
 function renderSidebar(){
   const el = $('#sidebar'); if(!el) return;
   el.innerHTML = "";
   state.selectedPlayers.forEach(name=>{
     const p = PROFILES[name] || {};
+    const imgHtml = p.img
+      ? `<img src="${p.img}" alt="${name}" loading="lazy">`
+      : `<div class="ph"></div>`;
+    const colorIdx = state.selectedPlayers.indexOf(name) % 5;
     const card = document.createElement('div');
-    card.className = 'person-card';
+    card.className = 'person-card c' + colorIdx;
     card.innerHTML = `
-      <div class="pc-img">${p.img ? `<img src="${p.img}" alt="${name}">` : `<div class="ph"></div>`}</div>
+      <div class="pc-img">${imgHtml}</div>
       <div class="pc-text">
         <div class="pc-name">${name}</div>
         <div class="pc-note">${(p.note||"").replaceAll("<","&lt;")}</div>
@@ -210,7 +227,7 @@ function openProfileEditor(){
     row.innerHTML = `
       <div class="label">${name}</div>
       <div class="fields">
-        <input type="url" placeholder="Kép URL" data-name="${name}" class="pf-img" value="${p.img||""}" />
+        <input type="url" placeholder="Kép URL (pl. img/adam.jpg)" data-name="${name}" class="pf-img" value="${p.img||""}" />
         <textarea placeholder="Leírás" data-name="${name}" class="pf-note">${p.note||""}</textarea>
       </div>`;
     wrap.appendChild(row);
@@ -278,9 +295,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // Betöltés
   const params = new URLSearchParams(location.search);
   const p64 = params.get("p");
-  const saved = (()=>{
-    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; }
-  })();
+  const saved = (()=>{ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; } })();
 
   if(p64){
     try{

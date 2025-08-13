@@ -86,4 +86,17 @@
           <button value="cancel" class="secondary">Mégse</button>
           <button id="saveProfilesBtn" value="default" class="primary">Mentés</button>
         </div>
-        <div class="picker-hint">Adj meg kép URL-t (pl. Imgur) és egy rövid leírást.</d
+        <div class="picker-hint">Adj meg kép URL-t (pl. Imgur) és egy rövid leírást.</div>
+      </form>
+    </dialog>
+
+    <script src="script.js?v=16"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js?v=16').catch(console.error);
+        });
+      }
+    </script>
+  </body>
+</html>

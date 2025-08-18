@@ -1,6 +1,6 @@
-/* ====== Webes Bingó – kombinált tábla + jobb oldali névjegyek (v23) ====== */
+/* ====== Webes Bingó – kombinált tábla + jobb oldali névjegyek (v24) ====== */
 
-/* --- Játékos presetek: a TE verziód érintetlenül hagyva --- */
+/* --- A TE presetjeid (változatlanul hagyva) --- */
 const PLAYER_PRESETS = {
   Toka: [
     "Toka loading","Lemerült a füles","De mi ez a champ?","Baby rage","Agyfaszt kapok",
@@ -25,59 +25,36 @@ const PLAYER_PRESETS = {
     "Ez win","Adjuk fel","„Gyors pisi szünet”","Kurva anyád",
   ],
   "Quinn van a gamebe": ["Szopd ki a faszukat/faszomat valor"],
-  "Hwei van a gamebe": ["Lááásd amit én"],
+  "Hwei van a gamebe":  ["Lááásd amit én"],
 };
 
-
-/* --- BEDRÓTOZOTT ALAPÉRTELMEZETT PROFILOK (minden eszközön azonos) --- */
-/* Tipp: a fájlneveket ékezet nélkül add meg az img/ mappában. */
-const DEFAULT_PROFILES = {
-  "Toka":  { img: "img/adam.jpg",  note: "" },
-  "Dani":   { img: "img/bea.jpg",   note: "" },
-  "Beni": { img: "img/csaba.jpg", note: "" },
-  "Pintye":  { img: "img/dori.jpg",  note: "" },
-  "Jani": { img: "img/emoke.jpg", note: "" },
-  "Quinn van a gamebe":  { img: "img/quinn-and-valor.gif",  note: "" },
-  "Hwei van a gamebe": { img: "img/emoke.jpg", note: "" }
-};
-
-// === Fix, névhez kötött színek (0..4 az 5 meglévő színhez) ===
-const COLOR_MAP = {
-  "Toka": 0,
-  "Dani": 1,
-  "Beni": 2,
-  "Pintye": 3,
-  "Jani": 4,
-  "Quinn van a gamebe": 3,
-  "Hwei van a gamebe": 2
-};
-const COLOR_COUNT = 5;
-
-// Ha új/idegen név kerül be, kapjon stabil, determinisztikus színt:
-function nameToColorIdx(name){
-  if (name in COLOR_MAP) return COLOR_MAP[name];
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-  return h % COLOR_COUNT;
-}
-
-
-/* --- Bedrótozott alap profilok (img/<slug>.jpg), később felülírhatók --- */
+/* --- Bedrótozott alap profilok (egységes minden eszközön) --- */
 function slugifyName(n){
   return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .toLowerCase().replace(/[^a-z0-9]+/g,'').trim();
 }
-const DEFAULT_PROFILES = Object.fromEntries(
-  Object.keys(PLAYER_PRESETS).map(n => [n, { img: `img/${slugifyName(n)}.jpg`, note: "", bg: "" }])
-);
+const DEFAULT_PROFILES = {
+  Toka:  { img: "img/toka.jpg",  note: "", bg: "" },
+  Dani:  { img: "img/dani.jpg",  note: "", bg: "" },
+  Beni:  { img: "img/beni.jpg",  note: "", bg: "" },
+  Pintye:{ img: "img/pintye.jpg",note: "", bg: "" },
+  Jani:  { img: "img/jani.jpg",  note: "", bg: "" },
+  "Quinn van a gamebe": { img: "img/quinn-and-valor.gif", note: "", bg: "" },
+  "Hwei van a gamebe":  { img: "img/hwei.jpg",           note: "", bg: "" },
+};
 
-/* --- Fix, névhez kötött színek (0..4). A fő nevek kézzel kiosztva. --- */
+/* --- Fix, névhez kötött színek --- */
 const COLOR_COUNT = 5;
-const COLOR_OVERRIDE = { Toka:0, Dani:1, Beni:2, Pintye:3, Jani:4 }; // kézi kiosztás
-function hash32(str){ let h=2166136261>>>0; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+const COLOR_OVERRIDE = { Toka:0, Dani:1, Beni:2, Pintye:3, Jani:4,
+  "Quinn van a gamebe":3, "Hwei van a gamebe":2 };
+function hash32(str){
+  let h=2166136261>>>0;
+  for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619); }
+  return h>>>0;
+}
 function nameToColorIdx(name){
   if (name in COLOR_OVERRIDE) return COLOR_OVERRIDE[name] % COLOR_COUNT;
-  return hash32(name) % COLOR_COUNT; // stabil, de 0..4 között
+  return hash32(name) % COLOR_COUNT; // stabil fallback 0..4 között
 }
 
 /* --- Profilok (kép + jegyzet + háttér [szín vagy kép]) --- */
@@ -96,28 +73,65 @@ const STORAGE_KEY = "hu-bingo-combined-v1";
 const $ = (sel, root=document) => root.querySelector(sel);
 
 function seededRandom(seed){
-  function xmur3(str){ let h=1779033703 ^ str.length; for(let i=0;i<str.length;i++){ h=Math.imul(h ^ str.charCodeAt(i),3432918353); h=(h<<13)|(h>>>19); } return function(){ h=Math.imul(h ^ (h>>>16),2246822507); h=Math.imul(h ^ (h>>>13),3266489909); h^=h>>>16; return h>>>0; } }
-  function sfc32(a,b,c,d){ return function(){ a>>>=0;b>>=0;c>>=0;d>>=0; let t=(a+b)|0; a=b^(b>>>9); b=(c+(c<<3))|0; c=(c<<21)|(c>>>11); d=(d+1)|0; t=(t+d)|0; c=(c+t)|0; return (t>>>0)/4294967296; } }
-  const f=xmur3(String(seed)); return sfc32(f(),f(),f(),f());
+  function xmur3(str){
+    let h=1779033703 ^ str.length;
+    for(let i=0;i<str.length;i++){
+      h = Math.imul(h ^ str.charCodeAt(i),3432918353);
+      h = (h<<13)|(h>>>19);
+    }
+    return function(){
+      h = Math.imul(h ^ (h>>>16),2246822507);
+      h = Math.imul(h ^ (h>>>13),3266489909);
+      h ^= h>>>16;
+      return h>>>0;
+    };
+  }
+  function sfc32(a,b,c,d){
+    return function(){
+      a>>>=0; b>>>=0; c>>>=0; d>>>=0;
+      let t=(a+b)|0;
+      a = b^(b>>>9);
+      b = (c+(c<<3))|0;
+      c = (c<<21)|(c>>>11);
+      d = (d+1)|0;
+      t = (t+d)|0;
+      c = (c+t)|0;
+      return (t>>>0)/4294967296;
+    };
+  }
+  const f=xmur3(String(seed));
+  return sfc32(f(),f(),f(),f());
 }
-function shuffle(arr, rand=Math.random){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rand()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function shuffle(arr, rand=Math.random){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(rand()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
 
-/* --- Mobil/desktop illesztés: tábla férjen ki görgetés nélkül --- */
+/* --- Tábla magasság illesztése --- */
 function fitToViewport(){
-  const header=$('.app-header'); const footer=$('.app-footer'); const board=$('#board');
+  const header=$('.app-header'), footer=$('.app-footer'), board=$('#board');
   if(!header || !footer || !board) return;
   const vh=(window.visualViewport?.height)||window.innerHeight;
-  const bodyStyles=getComputedStyle(document.body); const boardStyles=getComputedStyle(board);
-  const gap=parseFloat(boardStyles.gap)||0, padTop=parseFloat(boardStyles.paddingTop)||0, padBottom=parseFloat(boardStyles.paddingBottom)||0;
-  const bodyTop=parseFloat(bodyStyles.paddingTop)||0, bodyBottom=parseFloat(bodyStyles.paddingBottom)||0;
-  const fudge=10; const rows=5;
-  const available = vh - header.offsetHeight - footer.offsetHeight - bodyTop - bodyBottom - padTop - padBottom - fudge;
+  const bodyStyles=getComputedStyle(document.body);
+  const boardStyles=getComputedStyle(board);
+  const gap=parseFloat(boardStyles.gap)||0;
+  const padTop=parseFloat(boardStyles.paddingTop)||0;
+  const padBottom=parseFloat(boardStyles.paddingBottom)||0;
+  const bodyTop=parseFloat(bodyStyles.paddingTop)||0;
+  const bodyBottom=parseFloat(bodyStyles.paddingBottom)||0;
+  const rows=5, fudge=10;
+  const available = vh - header.offsetHeight - footer.offsetHeight
+    - bodyTop - bodyBottom - padTop - padBottom - fudge;
   const cellH = Math.max(52, Math.floor((available - gap*(rows-1)) / rows));
-  document.documentElement.style.setProperty('--cell-h', cellH+'px');
+  document.documentElement.style.setProperty('--cell-h',  cellH+'px');
   document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH*0.26)))+'px');
 }
 
-/* --- Állapot + bingó --- */
+/* --- Állapot + Bingó --- */
 const state = { selectedPlayers: [], cells: [] };
 let lastLines = 0;
 
@@ -131,30 +145,32 @@ function countBingos(cells){
 }
 function maybeCelebrate(){
   const lines = countBingos(state.cells);
-  if (lines > lastLines){
-    const dlg = $('#bingoDialog'); const msg = $('#bingoMessage'); const d = lines - lastLines;
-    if (msg) msg.textContent = `Új vonal(ak): +${d}. Összesen: ${lines}.`;
-    if (dlg?.showModal){ try{ dlg.showModal(); }catch(e){} } else { alert('🎉 BINGÓ! 🎉'); }
+  if(lines > lastLines){
+    const dlg = $('#bingoDialog'); const msg = $('#bingoMessage');
+    const d = lines - lastLines;
+    if(msg) msg.textContent = `Új vonal(ak): +${d}. Összesen: ${lines}.`;
+    if(dlg?.showModal){ try{ dlg.showModal(); }catch{} } else { alert('🎉 BINGÓ! 🎉'); }
   }
   lastLines = lines;
 }
 
-/* --- 25 kártya generálása (kiegyensúlyozott kvótákkal) --- */
+/* --- 25 cella előállítása (3–5 játékos, kvóta szerinti elosztás) --- */
 function buildCombinedCells(names, seed=""){
   const k=names.length, rand=seed?seededRandom(seed):Math.random;
   const base=Math.floor(25/k); let rem=25%k;
   const order=shuffle([...names], rand);
-  const quotas=Object.fromEntries(names.map(n=>[n, base])); for(let i=0;i<rem;i++){ quotas[order[i]]++; }
+  const quotas=Object.fromEntries(names.map(n=>[n, base]));
+  for(let i=0;i<rem;i++) quotas[order[i]]++;
   let pool = [];
   names.forEach(n=>{
     const words = shuffle(PLAYER_PRESETS[n], rand).slice(0, quotas[n]);
-    pool.push(...words.map(w=>({ text:w, owner:n })));
+    pool.push(...words.map(w=>({text:w, owner:n})));
   });
-  pool = shuffle(pool, rand).slice(0, 25);
+  pool = shuffle(pool, rand).slice(0,25);
   return pool.map(it => ({ text: it.text, owner: it.owner, marked:false }));
 }
 
-/* --- Render: tábla + jobb oldali névjegykártyák --- */
+/* --- Render: tábla + névjegysáv --- */
 function renderBoard(){
   const board=$('#board'); board.innerHTML="";
   const tpl=$('#cellTemplate');
@@ -177,7 +193,7 @@ function renderBoard(){
   renderSidebar();
 }
 
-/* háttér alkalmazása: szín (hex/rgb/hsl) vagy kép-URL */
+/* névjegykártya háttér beállítás: szín (hex/rgb/hsl) vagy kép-URL */
 function applyCardBackground(card, bg){
   if (!bg) return false;
   const v = String(bg).trim(); if (!v) return false;
@@ -190,6 +206,7 @@ function applyCardBackground(card, bg){
   card.style.setProperty('--pc-bg-image', `url("${v}")`);
   return true;
 }
+function escapeHTML(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 
 function renderSidebar(){
   const el=$('#sidebar'); if(!el) return;
@@ -204,15 +221,14 @@ function renderSidebar(){
       <div class="pc-img">${imgHtml}</div>
       <div class="pc-text">
         <div class="pc-name">${name}</div>
-        <div class="pc-note">${(p.note||"").replaceAll("<","&lt;")}</div>
+        <div class="pc-note">${escapeHTML(p.note||"")}</div>
       </div>`;
-    // Egyedi háttér, ha van (szín vagy kép) – a bélyegkép NEM tűnik el (CSS kezeli)
-    applyCardBackground(card, p.bg);
+    applyCardBackground(card, p.bg); // egyedi háttér (szín/kép)
     el.appendChild(card);
   });
 }
 
-/* --- Mentés / betöltés / státusz --- */
+/* --- Mentés / státusz --- */
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify({ selectedPlayers: state.selectedPlayers, cells: state.cells })); }
 function loadState(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; } }
 
@@ -248,6 +264,7 @@ function setupMenu(){
   btn.addEventListener('click', (e)=>{ e.stopPropagation(); menu.hidden ? open() : close(); });
   document.addEventListener('click', (e)=>{ if(menu.hidden)return; if(!menu.contains(e.target) && e.target!==btn) close(); });
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+
   // Profilok szerkesztése
   $('#editProfilesBtn').addEventListener('click', ()=>{ menu.hidden=true; openProfileEditor(); });
 }
@@ -268,9 +285,9 @@ function openProfileEditor(){
   $('#profileEditor')?.showModal?.();
 }
 function commitProfiles(){
-  document.querySelectorAll('.pf-img').forEach(inp=>{ const name=inp.getAttribute('data-name'); PROFILES[name]=PROFILES[name]||{}; PROFILES[name].img = inp.value.trim(); });
-  document.querySelectorAll('.pf-note').forEach(inp=>{ const name=inp.getAttribute('data-name'); PROFILES[name]=PROFILES[name]||{}; PROFILES[name].note = inp.value.trim(); });
-  document.querySelectorAll('.pf-bg').forEach(inp=>{ const name=inp.getAttribute('data-name'); PROFILES[name]=PROFILES[name]||{}; PROFILES[name].bg = inp.value.trim(); });
+  document.querySelectorAll('.pf-img').forEach(inp=>{ const name=inp.getAttribute('data-name'); (PROFILES[name]??=(PROFILES[name]||{})).img = inp.value.trim(); });
+  document.querySelectorAll('.pf-note').forEach(inp=>{ const name=inp.getAttribute('data-name'); (PROFILES[name]??=(PROFILES[name]||{})).note = inp.value.trim(); });
+  document.querySelectorAll('.pf-bg').forEach(inp=>{ const name=inp.getAttribute('data-name'); (PROFILES[name]??=(PROFILES[name]||{})).bg = inp.value.trim(); });
   saveProfiles(); renderSidebar();
 }
 
@@ -317,8 +334,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
   // Betöltés (URL vagy localStorage)
   const params=new URLSearchParams(location.search); const p64=params.get("p");
-  const saved=(()=>{ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; } })();
-
   if(p64){
     try{
       const decoded = decodeURIComponent(escape(atob(p64)));
@@ -332,6 +347,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       }
     }catch{}
   }
+  const saved = loadState();
   if(saved && Array.isArray(saved.selectedPlayers) && saved.selectedPlayers.length){
     state.selectedPlayers = saved.selectedPlayers.filter(n => PLAYER_PRESETS[n]);
     state.cells = (saved.cells||[]).filter(Boolean);

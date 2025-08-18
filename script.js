@@ -45,7 +45,7 @@ const COLOR_MAP = {
   "Pintye": 3,
   "Jani": 4,
   "Quinn van a gamebe": 5,
-  "Hwei van a gamebe": 4
+  "Hwei van a gamebe": 6
 };
 const COLOR_COUNT = 5;
 

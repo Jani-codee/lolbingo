@@ -2,53 +2,39 @@
 
 /* --- Játékos presetek: név -> saját kifejezések listája --- */
 const PLAYER_PRESETS = {
-  "Ádám": [
-    "Sprint demo","Code review","Bugfix","Refaktor","Merging","Ticket csúszik",
-    "„Nézzük meg gyorsan”","CI lefutott","Deploy","„Ez edge-case”","TDD",
-    "„Majd backlog”","Meeting elhúzódik","Kamera off","Késés","Chat ping",
-    "Release note","„Nem reprodukálható”","Hotfix","Pair programming","Lint hiba",
-    "PR sablon","Staging","„Újraindítottam”","Spec hiányos"
+  "Toka": [
+    "Toka loading","Lemerült a füles","De mi ez a champ?","Baby rage","Agyfaszt kapok","„Sírás”","?","„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”","Kurva anyád"
   ],
-  "Bea": [
-    "Marketing slide","Kampányterv","CTA változtatás","A/B teszt","„Megkérdezem a csapatot”",
-    "Szerkesztési jog","Kezdőlap frissítés","„Később posztoljuk”","Link rövidítése",
-    "„Ezt még jóvá kell hagyni”","UAT","Teszt felhasználó","„Küldöm a linket”",
-    "Árajánlat","Persona","„Nincs elég adat”","Workshop","Hírlevél","KPI",
-    "Wireframe","„Van erről stat?”","Jóváhagyás","Brief","Landing","Benchmark"
+  "Dani": [
+    "Szopd ki a faszt","Kurva anyád","Szopd le anyád","De mi ez a champ?","?","„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”"
   ],
-  "Csaba": [
-    "Szerver restarthoz kell jog","Log elemzés","CPU spike","Mem leak gyanú",
-    "„Nála működik”","Késő este deploy","Rollback","Config mismatch",
-    "„Majd cronból megy”","Rate limit","„Átmeneti hiba”","Alert jött",
-    "DNS cache","„Átlagos terhelés”","Failover","Healthcheck","„Kézzel patcheltem”",
-    "Kibana","Grafana","„Rögtön nézem”","SSH","„Státusz oldalt nézted?”",
-    "Timeout","„Kint van az incident”","Root cause"
+  "Beni": [
+    "Dont fos","Nem hiszem el (gechi)","Megbasz/od","„Zihálás”","Höhöhőőő","Csípd meg/szedd szét","„Kiabál”","Gyereide","Ajjjj","Haggyámán","De mi ez a champ?","?","„Rasszista megnyilvánulások”","5 gold","Végtelen slukkos manórúd","A manórúd utolér","Adjuk fel","„Gyors pisi szünet”","Kurva anyád","Baby rage"
   ],
-  "Dóri": [
-    "User interjú","Persona update","Journey map","Affinity diagram",
-    "„Papíron jobban nézett ki”","Tap target kicsi","„Mobile first”",
-    "Figma frissítés","Spacing","„Sötét mód mikor?”","Kontraszt kevés",
-    "„Ez túl zajos”","Szegmens","Heatmap","FigJam","„Ez nem fér ki”",
-    "„Amikor a user...”","AB teszt terv","„Fájlrendszer?”","Komponens könyvtár",
-    "„Nem konzisztens”","Spacing token","„12 oszlopos grid”","„Rendszer ikon?”","Prototípus"
+  "Pintye": [
+    "De mi ez a champ?","Meg/Basztak","Tonyás","„Fogytékos nevetés”","Nyílván megint itt a jg-s","Ajjjj","?","„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”","Kurva anyád","Baby rage"
   ],
-  "Emőke": [
-    "Pénzügyi riport","Budget cut","Forecast","„Szoros a keret”","ROI",
-    "„Backlog prioritás”","SLA","„Scope csökkentés”","Risk","„Roadmap csúszik”",
-    "„Stakeholder review”","High-level","OKR","„Ezt mérjük?”","„Ez nem fér bele”",
-    "„Szállítási dátum?”","„Melyik quarter?”","„Pingeld meg őket”","Approval",
-    "Contract","„Vendor válaszolt?”","„QBR”","„RACI”","„Mit mond a PMO?”","„Escalation”"
+  "Jani": [
+    "Dont fos","Foglak","Ez","Nyertem a mentált","?","„Rasszista megnyilvánulások”","Misseltem a cannont","5 gold","Szeddszét","„Bántanak a csúnya rossz magyarok”","Könnyü","Gatyámba vannak","Mer mit csinál lerjzol?","Ez win","Adjuk fel","„Gyors pisi szünet”","Kurva anyád"
+  ],
+    "Quinn van a gamebe": [
+    "Szopd ki a faszukat/faszomat valor"
+  ],
+    "Hwei van a gamebe": [
+    "Lááásd amit én"
   ]
 };
 
 /* --- BEDRÓTOZOTT ALAPÉRTELMEZETT PROFILOK (minden eszközön azonos) --- */
 /* Tipp: a fájlneveket ékezet nélkül add meg az img/ mappában. */
 const DEFAULT_PROFILES = {
-  "Ádám":  { img: "img/adam.jpg",  note: "" },
-  "Bea":   { img: "img/bea.jpg",   note: "" },
-  "Csaba": { img: "img/csaba.jpg", note: "" },
-  "Dóri":  { img: "img/dori.jpg",  note: "" },
-  "Emőke": { img: "img/emoke.jpg", note: "" }
+  "Toka":  { img: "img/adam.jpg",  note: "" },
+  "Dani":   { img: "img/bea.jpg",   note: "" },
+  "Beni": { img: "img/csaba.jpg", note: "" },
+  "Pintye":  { img: "img/dori.jpg",  note: "" },
+  "Jani": { img: "img/emoke.jpg", note: "" },
+  "Quinn van a gamebe":  { img: "img/dori.jpg",  note: "" },
+  "Hwei van a gamebe": { img: "img/emoke.jpg", note: "" }
 };
 
 /* --- Profilok (kép + jegyzet) --- */

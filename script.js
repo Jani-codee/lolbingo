@@ -1,75 +1,60 @@
-/* ====== Webes Bingó – kombinált tábla + jobb oldali névjegyek (v17) ====== */
+/* ====== Webes Bingó – kombinált tábla + jobb oldali névjegyek (v23) ====== */
 
-/* --- Játékos presetek: név -> saját kifejezések listája --- */
+/* --- Játékos presetek: a TE verziód érintetlenül hagyva --- */
 const PLAYER_PRESETS = {
-  "Toka": [
-    "Toka loading","Lemerült a füles","De mi ez a champ?","Baby rage","Agyfaszt kapok","„Sírás”","?","„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”","Kurva anyád"
+  Toka: [
+    "Toka loading","Lemerült a füles","De mi ez a champ?","Baby rage","Agyfaszt kapok",
+    "„Sírás”","?","„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”","Kurva anyád",
   ],
-  "Dani": [
-    "Szopd ki a faszt","Kurva anyád","Szopd le anyád","De mi ez a champ?","?","„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”"
+  Dani: [
+    "Szopd ki a faszt","Kurva anyád","Szopd le anyád","De mi ez a champ?","?","„Rasszista megnyilvánulások”",
+    "Adjuk fel","„Gyors pisi szünet”",
   ],
-  "Beni": [
-    "Dont fos","Nem hiszem el (gechi)","Megbasz/od","„Zihálás”","Höhöhőőő","Csípd meg/szedd szét","„Kiabál”","Gyereide","Ajjjj","Haggyámán","De mi ez a champ?","?","„Rasszista megnyilvánulások”","5 gold","Végtelen slukkos manórúd","A manórúd utolér","Adjuk fel","„Gyors pisi szünet”","Kurva anyád","Baby rage"
+  Beni: [
+    "Dont fos","Nem hiszem el (gechi)","Megbasz/od","„Zihálás”","Höhöhőőő","Csípd meg/szedd szét","„Kiabál”",
+    "Gyereide","Ajjjj","Haggyámán","De mi ez a champ?","?","„Rasszista megnyilvánulások”","5 gold",
+    "Végtelen slukkos manórúd","A manórúd utolér","Adjuk fel","„Gyors pisi szünet”","Kurva anyád","Baby rage",
   ],
-  "Pintye": [
-    "De mi ez a champ?","Meg/Basztak","Tonyás","„Fogytékos nevetés”","Nyílván megint itt a jg-s","Ajjjj","?","„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”","Kurva anyád","Baby rage"
+  Pintye: [
+    "De mi ez a champ?","Meg/Basztak","Tonyás","„Fogytékos nevetés”","Nyílván megint itt a jg-s","Ajjjj","?",
+    "„Rasszista megnyilvánulások”","Adjuk fel","„Gyors pisi szünet”","Kurva anyád","Baby rage",
   ],
-  "Jani": [
-    "Dont fos","Foglak","Ez","Nyertem a mentált","?","„Rasszista megnyilvánulások”","Misseltem a cannont","5 gold","Szeddszét","„Bántanak a csúnya rossz magyarok”","Könnyü","Gatyámba vannak","Mer mit csinál lerjzol?","Ez win","Adjuk fel","„Gyors pisi szünet”","Kurva anyád"
+  Jani: [
+    "Dont fos","Foglak","Ez","Nyertem a mentált","?","„Rasszista megnyilvánulások”","Misseltem a cannont",
+    "5 gold","Szeddszét","„Bántanak a csúnya rossz magyarok”","Könnyü","Gatyámba vannak","Mer mit csinál lerjzol?",
+    "Ez win","Adjuk fel","„Gyors pisi szünet”","Kurva anyád",
   ],
-    "Quinn van a gamebe": [
-    "Szopd ki a faszukat/faszomat valor"
-  ],
-    "Hwei van a gamebe": [
-    "Lááásd amit én"
-  ]
+  "Quinn van a gamebe": ["Szopd ki a faszukat/faszomat valor"],
+  "Hwei van a gamebe": ["Lááásd amit én"],
 };
 
-/* --- BEDRÓTOZOTT ALAPÉRTELMEZETT PROFILOK (minden eszközön azonos) --- */
-/* Tipp: a fájlneveket ékezet nélkül add meg az img/ mappában. */
-const DEFAULT_PROFILES = {
-  "Toka":  { img: "img/adam.jpg",  note: "" },
-  "Dani":   { img: "img/bea.jpg",   note: "" },
-  "Beni": { img: "img/csaba.jpg", note: "" },
-  "Pintye":  { img: "img/dori.jpg",  note: "" },
-  "Jani": { img: "img/emoke.jpg", note: "" },
-  "Quinn van a gamebe":  { img: "img/quinn-and-valor.gif",  note: "" },
-  "Hwei van a gamebe": { img: "img/emoke.jpg", note: "" }
-};
+/* --- Bedrótozott alap profilok (img/<slug>.jpg), később felülírhatók --- */
+function slugifyName(n){
+  return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase().replace(/[^a-z0-9]+/g,'').trim();
+}
+const DEFAULT_PROFILES = Object.fromEntries(
+  Object.keys(PLAYER_PRESETS).map(n => [n, { img: `img/${slugifyName(n)}.jpg`, note: "", bg: "" }])
+);
 
-// === Fix, névhez kötött színek (0..4 az 5 meglévő színhez) ===
-const COLOR_MAP = {
-  "Toka": 0,
-  "Dani": 1,
-  "Beni": 2,
-  "Pintye": 3,
-  "Jani": 4,
-  "Quinn van a gamebe": 5,
-  "Hwei van a gamebe": 6
-};
+/* --- Fix, névhez kötött színek (0..4). A fő nevek kézzel kiosztva. --- */
 const COLOR_COUNT = 5;
-
-// Ha új/idegen név kerül be, kapjon stabil, determinisztikus színt:
+const COLOR_OVERRIDE = { Toka:0, Dani:1, Beni:2, Pintye:3, Jani:4 }; // kézi kiosztás
+function hash32(str){ let h=2166136261>>>0; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
 function nameToColorIdx(name){
-  if (name in COLOR_MAP) return COLOR_MAP[name];
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-  return h % COLOR_COUNT;
+  if (name in COLOR_OVERRIDE) return COLOR_OVERRIDE[name] % COLOR_COUNT;
+  return hash32(name) % COLOR_COUNT; // stabil, de 0..4 között
 }
 
-
-/* --- Profilok (kép + jegyzet) --- */
+/* --- Profilok (kép + jegyzet + háttér [szín vagy kép]) --- */
 const PROFILE_KEY = "hu-bingo-profiles-v1";
-let PROFILES = {}; // { Név: {img:"", note:""} }
+let PROFILES = {}; // { Név: {img:"", note:"", bg:""} }
 function loadProfiles(){
-  // a helyi (szerkesztett) értékek felülírják a bedrótozott alapokat
   let local = {};
   try { local = JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch { local = {}; }
-  PROFILES = { ...DEFAULT_PROFILES, ...local };
+  PROFILES = { ...DEFAULT_PROFILES, ...local }; // helyi felülírja az alapot
 }
-function saveProfiles(){
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(PROFILES||{}));
-}
+function saveProfiles(){ localStorage.setItem(PROFILE_KEY, JSON.stringify(PROFILES||{})); }
 
 /* --- Általános --- */
 const BOARD_SIZE = 5;
@@ -78,50 +63,30 @@ const $ = (sel, root=document) => root.querySelector(sel);
 
 function seededRandom(seed){
   function xmur3(str){ let h=1779033703 ^ str.length; for(let i=0;i<str.length;i++){ h=Math.imul(h ^ str.charCodeAt(i),3432918353); h=(h<<13)|(h>>>19); } return function(){ h=Math.imul(h ^ (h>>>16),2246822507); h=Math.imul(h ^ (h>>>13),3266489909); h^=h>>>16; return h>>>0; } }
-  function sfc32(a,b,c,d){ return function(){ a>>>=0;b>>=0;c>>=0;d>>=0; let t=(a+b)|0; a=b^(b>>>9); b=(c+(c<<3))|0; c=(c<<21|c>>>11); d=(d+1)|0; t=(t+d)|0; c=(c+t)|0; return (t>>>0)/4294967296; } }
+  function sfc32(a,b,c,d){ return function(){ a>>>=0;b>>=0;c>>=0;d>>=0; let t=(a+b)|0; a=b^(b>>>9); b=(c+(c<<3))|0; c=(c<<21)|(c>>>11); d=(d+1)|0; t=(t+d)|0; c=(c+t)|0; return (t>>>0)/4294967296; } }
   const f=xmur3(String(seed)); return sfc32(f(),f(),f(),f());
 }
 function shuffle(arr, rand=Math.random){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rand()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-// ---- Mobil/desktop illesztés: a tábla magassága férjen ki görgetés nélkül
+/* --- Mobil/desktop illesztés: tábla férjen ki görgetés nélkül --- */
 function fitToViewport(){
-  const header = document.querySelector('.app-header');
-  const footer = document.querySelector('.app-footer');
-  const board  = document.getElementById('board');
+  const header=$('.app-header'); const footer=$('.app-footer'); const board=$('#board');
   if(!header || !footer || !board) return;
-
-  const vh = (window.visualViewport?.height) || window.innerHeight;
-  const bodyStyles  = getComputedStyle(document.body);
-  const boardStyles = getComputedStyle(board);
-
-  const gap        = parseFloat(boardStyles.gap) || 0;
-  const padTop     = parseFloat(boardStyles.paddingTop) || 0;
-  const padBottom  = parseFloat(boardStyles.paddingBottom) || 0;
-  const bodyTop    = parseFloat(bodyStyles.paddingTop) || 0;
-  const bodyBottom = parseFloat(bodyStyles.paddingBottom) || 0;
-
-  // kis ráhagyás, hogy biztosan ne legyen 1-2px felesleges görgetés
-  const fudge = 10;
-
-  const rows = 5;
-  const available = vh
-    - header.offsetHeight
-    - footer.offsetHeight
-    - bodyTop - bodyBottom
-    - padTop  - padBottom
-    - fudge;
-
-  const cellH = Math.max(52, Math.floor((available - gap * (rows - 1)) / rows));
-  document.documentElement.style.setProperty('--cell-h',  cellH + 'px');
-  document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH * 0.26))) + 'px');
+  const vh=(window.visualViewport?.height)||window.innerHeight;
+  const bodyStyles=getComputedStyle(document.body); const boardStyles=getComputedStyle(board);
+  const gap=parseFloat(boardStyles.gap)||0, padTop=parseFloat(boardStyles.paddingTop)||0, padBottom=parseFloat(boardStyles.paddingBottom)||0;
+  const bodyTop=parseFloat(bodyStyles.paddingTop)||0, bodyBottom=parseFloat(bodyStyles.paddingBottom)||0;
+  const fudge=10; const rows=5;
+  const available = vh - header.offsetHeight - footer.offsetHeight - bodyTop - bodyBottom - padTop - padBottom - fudge;
+  const cellH = Math.max(52, Math.floor((available - gap*(rows-1)) / rows));
+  document.documentElement.style.setProperty('--cell-h', cellH+'px');
+  document.documentElement.style.setProperty('--cell-fs', Math.max(11, Math.min(18, Math.floor(cellH*0.26)))+'px');
 }
 
-
-/* --- Állapot --- */
+/* --- Állapot + bingó --- */
 const state = { selectedPlayers: [], cells: [] };
 let lastLines = 0;
 
-/* --- Bingó logika --- */
 function countBingos(cells){
   const g=i=>cells[i].marked?1:0, n=BOARD_SIZE; let lines=0;
   for(let r=0;r<n;r++){ let ok=true; for(let c=0;c<n;c++){ if(!g(r*n+c)){ok=false;break;} } if(ok) lines++; }
@@ -132,15 +97,15 @@ function countBingos(cells){
 }
 function maybeCelebrate(){
   const lines = countBingos(state.cells);
-  if(lines > lastLines){
+  if (lines > lastLines){
     const dlg = $('#bingoDialog'); const msg = $('#bingoMessage'); const d = lines - lastLines;
-    if(msg) msg.textContent = `Új vonal(ak): +${d}. Összesen: ${lines}.`;
-    if(dlg?.showModal){ try{ dlg.showModal(); }catch(e){} } else { alert('🎉 BINGÓ! 🎉'); }
+    if (msg) msg.textContent = `Új vonal(ak): +${d}. Összesen: ${lines}.`;
+    if (dlg?.showModal){ try{ dlg.showModal(); }catch(e){} } else { alert('🎉 BINGÓ! 🎉'); }
   }
   lastLines = lines;
 }
 
-/* --- Kombinált tábla --- */
+/* --- 25 kártya generálása (kiegyensúlyozott kvótákkal) --- */
 function buildCombinedCells(names, seed=""){
   const k=names.length, rand=seed?seededRandom(seed):Math.random;
   const base=Math.floor(25/k); let rem=25%k;
@@ -149,16 +114,16 @@ function buildCombinedCells(names, seed=""){
   let pool = [];
   names.forEach(n=>{
     const words = shuffle(PLAYER_PRESETS[n], rand).slice(0, quotas[n]);
-    pool.push(...words.map(w=>({text:w, owner:n})));
+    pool.push(...words.map(w=>({ text:w, owner:n })));
   });
-  pool = shuffle(pool, rand).slice(0,25);
-  return pool.map(it => ({ text: it.text, owner: it.owner, marked: false }));
+  pool = shuffle(pool, rand).slice(0, 25);
+  return pool.map(it => ({ text: it.text, owner: it.owner, marked:false }));
 }
 
-/* --- Render: tábla + jobb oldali kártyák --- */
+/* --- Render: tábla + jobb oldali névjegykártyák --- */
 function renderBoard(){
-  const board = $('#board'); board.innerHTML="";
-  const tpl = $('#cellTemplate');
+  const board=$('#board'); board.innerHTML="";
+  const tpl=$('#cellTemplate');
   state.cells.forEach((cell, idx)=>{
     const btn = tpl.content.firstElementChild.cloneNode(true);
     btn.innerHTML = `<div class="txt">${cell.text}</div><span class="owner"></span>`;
@@ -177,32 +142,46 @@ function renderBoard(){
   });
   renderSidebar();
 }
+
+/* háttér alkalmazása: szín (hex/rgb/hsl) vagy kép-URL */
+function applyCardBackground(card, bg){
+  if (!bg) return false;
+  const v = String(bg).trim(); if (!v) return false;
+  if (/^#([\da-f]{3,8})$/i.test(v) || /^rgba?\(/i.test(v) || /^hsla?\(/i.test(v)) {
+    card.classList.add('has-bgcolor');
+    card.style.setProperty('--pc-bg-color', v);
+    return true;
+  }
+  card.classList.add('has-bgimg');
+  card.style.setProperty('--pc-bg-image', `url("${v}")`);
+  return true;
+}
+
 function renderSidebar(){
-  const el = $('#sidebar'); if(!el) return;
-  el.innerHTML = "";
+  const el=$('#sidebar'); if(!el) return;
+  el.innerHTML="";
   state.selectedPlayers.forEach(name=>{
     const p = PROFILES[name] || {};
-    const imgHtml = p.img
-      ? `<img src="${p.img}" alt="${name}" loading="lazy">`
-      : `<div class="ph"></div>`;
-    const colorIdx = state.selectedPlayers.indexOf(name) % 5;
+    const colorIdx = nameToColorIdx(name);
     const card = document.createElement('div');
-    card.className = 'person-card c' + colorIdx;
+    card.className = 'person-card c'+colorIdx; // fix szín – fallback
+    const imgHtml = p.img ? `<img src="${p.img}" alt="${name}" loading="lazy">` : `<div class="ph"></div>`;
     card.innerHTML = `
       <div class="pc-img">${imgHtml}</div>
       <div class="pc-text">
         <div class="pc-name">${name}</div>
         <div class="pc-note">${(p.note||"").replaceAll("<","&lt;")}</div>
       </div>`;
+    // Egyedi háttér, ha van (szín vagy kép) – a bélyegkép NEM tűnik el (CSS kezeli)
+    applyCardBackground(card, p.bg);
     el.appendChild(card);
   });
 }
 
-/* --- Mentés / betöltés --- */
+/* --- Mentés / betöltés / státusz --- */
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify({ selectedPlayers: state.selectedPlayers, cells: state.cells })); }
 function loadState(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; } }
 
-/* --- Státusz --- */
 function updateStatus(){
   const lines = countBingos(state.cells);
   const pick = state.selectedPlayers.length ? " – " + state.selectedPlayers.join(", ") : "";
@@ -216,12 +195,11 @@ function rebuildBoard(seed=""){
   updateStatus(); saveState(); fitToViewport();
 }
 
-/* --- Picker --- */
+/* --- Játékosválasztó + menü + profil szerkesztő --- */
 function buildPicker(){
-  const list = $('#pickerList'); list.innerHTML="";
+  const list=$('#pickerList'); list.innerHTML="";
   Object.keys(PLAYER_PRESETS).forEach(name=>{
-    const item = document.createElement('label');
-    item.className = 'picker-item';
+    const item=document.createElement('label'); item.className='picker-item';
     const checked = state.selectedPlayers.includes(name) ? 'checked' : '';
     item.innerHTML = `<input type="checkbox" name="pick" value="${name}" ${checked}><span>${name}</span>`;
     list.appendChild(item);
@@ -229,51 +207,37 @@ function buildPicker(){
 }
 function openPicker(){ buildPicker(); $('#playerPicker')?.showModal?.(); }
 
-/* --- Menü + profil szerkesztő --- */
 function setupMenu(){
-  const btn=$('#moreBtn'), menu=$('#moreMenu');
-  if(!btn || !menu) return;
+  const btn=$('#moreBtn'), menu=$('#moreMenu'); if(!btn || !menu) return;
   function close(){ menu.hidden=true; btn.setAttribute('aria-expanded','false'); }
   function open(){ menu.hidden=false; btn.setAttribute('aria-expanded','true'); }
   btn.addEventListener('click', (e)=>{ e.stopPropagation(); menu.hidden ? open() : close(); });
   document.addEventListener('click', (e)=>{ if(menu.hidden)return; if(!menu.contains(e.target) && e.target!==btn) close(); });
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
-
   // Profilok szerkesztése
-  $('#editProfilesBtn').addEventListener('click', ()=>{
-    menu.hidden = true;
-    openProfileEditor();
-  });
+  $('#editProfilesBtn').addEventListener('click', ()=>{ menu.hidden=true; openProfileEditor(); });
 }
 function openProfileEditor(){
-  const wrap = $('#profileFields'); wrap.innerHTML = "";
+  const wrap=$('#profileFields'); wrap.innerHTML="";
   state.selectedPlayers.forEach(name=>{
-    const p = PROFILES[name] || {img:"", note:""};
-    const row = document.createElement('div');
-    row.className = 'profile-row';
+    const p = PROFILES[name] || { img:"", note:"", bg:"" };
+    const row=document.createElement('div'); row.className='profile-row';
     row.innerHTML = `
       <div class="label">${name}</div>
       <div class="fields">
-        <input type="url" placeholder="Kép URL (pl. img/adam.jpg)" data-name="${name}" class="pf-img" value="${p.img||""}" />
+        <input type="url" placeholder="Kép URL (pl. img/${slugifyName(name)}.jpg)" data-name="${name}" class="pf-img" value="${p.img||""}">
         <textarea placeholder="Leírás" data-name="${name}" class="pf-note">${p.note||""}</textarea>
+        <input type="text" placeholder="HÁTTÉR: #aabbcc vagy img/${slugifyName(name)}_bg.jpg" data-name="${name}" class="pf-bg" value="${p.bg||""}">
       </div>`;
     wrap.appendChild(row);
   });
   $('#profileEditor')?.showModal?.();
 }
 function commitProfiles(){
-  document.querySelectorAll('.pf-img').forEach(inp=>{
-    const name = inp.getAttribute('data-name');
-    PROFILES[name] = PROFILES[name] || {};
-    PROFILES[name].img = inp.value.trim();
-  });
-  document.querySelectorAll('.pf-note').forEach(inp=>{
-    const name = inp.getAttribute('data-name');
-    PROFILES[name] = PROFILES[name] || {};
-    PROFILES[name].note = inp.value.trim();
-  });
-  saveProfiles();
-  renderSidebar();
+  document.querySelectorAll('.pf-img').forEach(inp=>{ const name=inp.getAttribute('data-name'); PROFILES[name]=PROFILES[name]||{}; PROFILES[name].img = inp.value.trim(); });
+  document.querySelectorAll('.pf-note').forEach(inp=>{ const name=inp.getAttribute('data-name'); PROFILES[name]=PROFILES[name]||{}; PROFILES[name].note = inp.value.trim(); });
+  document.querySelectorAll('.pf-bg').forEach(inp=>{ const name=inp.getAttribute('data-name'); PROFILES[name]=PROFILES[name]||{}; PROFILES[name].bg = inp.value.trim(); });
+  saveProfiles(); renderSidebar();
 }
 
 /* --- Fő --- */
@@ -282,7 +246,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   setupMenu();
 
   // Új kártya – megerősítés
-  const newDlg = $('#newCardDialog');
+  const newDlg=$('#newCardDialog');
   $('#newCardBtn').addEventListener('click', ()=>{
     if(state.selectedPlayers.length < 3){ openPicker(); return; }
     newDlg?.showModal?.();
@@ -309,20 +273,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
   $('#saveProfilesBtn').addEventListener('click', ()=>{ commitProfiles(); $('#profileEditor')?.close?.(); });
 
   // Picker OK/Cancel
-  const picker = $('#playerPicker');
+  const picker=$('#playerPicker');
   $('#pickerOk').addEventListener('click', (e)=>{
     const names = Array.from(document.querySelectorAll('input[name="pick"]:checked')).map(i=>i.value);
     if(names.length < 3 || names.length > 5){ e.preventDefault(); alert("Válassz 3 és 5 fő között!"); return; }
-    picker.close();
-    state.selectedPlayers = names;
-    rebuildBoard("");
+    picker.close(); state.selectedPlayers = names; rebuildBoard("");
   });
   $('#pickerCancel').addEventListener('click', ()=> picker.close());
 
-  // Betöltés
-  const params = new URLSearchParams(location.search);
-  const p64 = params.get("p");
-  const saved = (()=>{ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; } })();
+  // Betöltés (URL vagy localStorage)
+  const params=new URLSearchParams(location.search); const p64=params.get("p");
+  const saved=(()=>{ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }catch{ return null; } })();
 
   if(p64){
     try{

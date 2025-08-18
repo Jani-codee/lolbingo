@@ -24,7 +24,7 @@ const PLAYER_PRESETS = {
     "5 gold","Szeddszét","„Bántanak a csúnya rossz magyarok”","Könnyü","Gatyámba vannak","Mer mit csinál lerjzol?",
     "Ez win","Adjuk fel","„Gyors pisi szünet”","Kurva anyád",
   ],
-  "Quinn van a gamebe": ["Szopd ki a faszukat/faszomat valor"],
+  "Quinn van a gamebe": ["Szopd ki a faszomat valor"],
   "Hwei van a gamebe":  ["Lááásd amit én"],
 };
 

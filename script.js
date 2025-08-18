@@ -28,6 +28,40 @@ const PLAYER_PRESETS = {
   "Hwei van a gamebe": ["Lááásd amit én"],
 };
 
+
+/* --- BEDRÓTOZOTT ALAPÉRTELMEZETT PROFILOK (minden eszközön azonos) --- */
+/* Tipp: a fájlneveket ékezet nélkül add meg az img/ mappában. */
+const DEFAULT_PROFILES = {
+  "Toka":  { img: "img/adam.jpg",  note: "" },
+  "Dani":   { img: "img/bea.jpg",   note: "" },
+  "Beni": { img: "img/csaba.jpg", note: "" },
+  "Pintye":  { img: "img/dori.jpg",  note: "" },
+  "Jani": { img: "img/emoke.jpg", note: "" },
+  "Quinn van a gamebe":  { img: "img/quinn-and-valor.gif",  note: "" },
+  "Hwei van a gamebe": { img: "img/emoke.jpg", note: "" }
+};
+
+// === Fix, névhez kötött színek (0..4 az 5 meglévő színhez) ===
+const COLOR_MAP = {
+  "Toka": 0,
+  "Dani": 1,
+  "Beni": 2,
+  "Pintye": 3,
+  "Jani": 4,
+  "Quinn van a gamebe": 3,
+  "Hwei van a gamebe": 2
+};
+const COLOR_COUNT = 5;
+
+// Ha új/idegen név kerül be, kapjon stabil, determinisztikus színt:
+function nameToColorIdx(name){
+  if (name in COLOR_MAP) return COLOR_MAP[name];
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return h % COLOR_COUNT;
+}
+
+
 /* --- Bedrótozott alap profilok (img/<slug>.jpg), később felülírhatók --- */
 function slugifyName(n){
   return n.normalize('NFD').replace(/[\u0300-\u036f]/g,'')

@@ -37,6 +37,27 @@ const DEFAULT_PROFILES = {
   "Hwei van a gamebe": { img: "img/emoke.jpg", note: "" }
 };
 
+// === Fix, névhez kötött színek (0..4 az 5 meglévő színhez) ===
+const COLOR_MAP = {
+  "Toka": 0,
+  "Dani": 1,
+  "Beni": 2,
+  "Pintye": 3,
+  "Jani": 4,
+  "Quinn van a gamebe": 5,
+  "Hwei van a gamebe": 4
+};
+const COLOR_COUNT = 5;
+
+// Ha új/idegen név kerül be, kapjon stabil, determinisztikus színt:
+function nameToColorIdx(name){
+  if (name in COLOR_MAP) return COLOR_MAP[name];
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return h % COLOR_COUNT;
+}
+
+
 /* --- Profilok (kép + jegyzet) --- */
 const PROFILE_KEY = "hu-bingo-profiles-v1";
 let PROFILES = {}; // { Név: {img:"", note:""} }
@@ -143,7 +164,7 @@ function renderBoard(){
     btn.innerHTML = `<div class="txt">${cell.text}</div><span class="owner"></span>`;
     const ownerEl = btn.querySelector('.owner');
     ownerEl.textContent = cell.owner;
-    const colorIdx = state.selectedPlayers.indexOf(cell.owner) % 5;
+    const colorIdx = nameToColorIdx(cell.owner);
     ownerEl.classList.add('c'+colorIdx);
     btn.setAttribute('aria-pressed', String(!!cell.marked));
     btn.addEventListener('click', ()=>{

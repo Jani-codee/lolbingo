@@ -33,7 +33,7 @@ const DEFAULT_PROFILES = {
   "Beni": { img: "img/csaba.jpg", note: "" },
   "Pintye":  { img: "img/dori.jpg",  note: "" },
   "Jani": { img: "img/emoke.jpg", note: "" },
-  "Quinn van a gamebe":  { img: "quinn-and-valor.gif",  note: "" },
+  "Quinn van a gamebe":  { img: "img/quinn-and-valor.gif",  note: "" },
   "Hwei van a gamebe": { img: "img/emoke.jpg", note: "" }
 };
 

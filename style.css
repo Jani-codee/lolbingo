@@ -367,3 +367,38 @@ dialog::backdrop{ background: rgba(0,0,0,.5); }
     padding-right: 0;
   }
 }
+
+/* ===== Névjegykártya: egyedi szín vagy kép a háttérben ===== */
+.person-card{ position: relative; overflow: hidden; }
+
+/* ha SZÍN van megadva */
+.person-card.has-bgcolor{
+  background: var(--pc-bg-color);
+  border-color: rgba(255,255,255,0.28);
+}
+
+/* ha KÉP van megadva – a bélyegkép NEM tűnik el */
+.person-card.has-bgimg{
+  /* marad a két oszlop (64px + szöveg), marad a normál padding is */
+  grid-template-columns: 64px 1fr;
+  padding: 10px;
+}
+.person-card.has-bgimg::before{
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--pc-bg-image);
+  background-size: cover; background-position: center;
+  filter: saturate(0.95);
+  z-index: 0;            /* háttérben */
+  pointer-events: none;
+}
+.person-card.has-bgimg::after{
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,.42), rgba(0,0,0,.25));
+  z-index: 0;            /* háttérben */
+  pointer-events: none;
+}
+/* a tartalom a háttér fölött legyen */
+.person-card .pc-img,
+.person-card .pc-text{ position: relative; z-index: 1; }

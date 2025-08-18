@@ -1,6 +1,6 @@
 // sw.js
-const CACHE_STATIC = 'bingo-static-v19';
-const CACHE_PAGES  = 'bingo-pages-v19';
+const CACHE_STATIC = 'bingo-static-v20';
+const CACHE_PAGES  = 'bingo-pages-v20';
 
 const PRECACHE = [
   './',
